@@ -1,0 +1,59 @@
+{
+    "name": "g1a/composer-update-lock-only",
+    "description": "Run 'composer update' to update composer.lock without installing dependencies.",
+    "type": "composer-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Greg Anderson",
+            "email": "greg.1.anderson@greenknowe.org"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "composer-plugin-api": "^1.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8.36|^6",
+        "php-coveralls/php-coveralls": "^1.0",
+        "squizlabs/php_codesniffer": "^2.8",
+        "composer/composer": "^1.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "ComposerUpdateLockOnly\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ComposerUpdateLockOnly\\": "tests/src/"
+        }
+    },
+    "extra": {
+        "class": "ComposerUpdateLockOnly\\Plugin",
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "scripts": {
+        "cs": "phpcs --standard=PSR2 -n src",
+        "cbf": "phpcbf --standard=PSR2 -n src",
+        "unit": "phpunit --colors=always",
+        "lint": [
+            "find src -name '*.php' -print0 | xargs -0 -n1 php -l",
+            "find tests/src -name '*.php' -print0 | xargs -0 -n1 php -l"
+        ],
+        "test": [
+            "@lint",
+            "@unit",
+            "@cs"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "platform": {
+            "php": "7.0.8"
+        }
+    }
+}
