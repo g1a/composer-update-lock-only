@@ -1,6 +1,6 @@
 {
     "name": "g1a/composer-update-lock-only",
-    "description": "Run 'composer update' to update composer.lock without installing dependencies.",
+    "description": "Run 'composer update:lock' to update composer.lock without installing dependencies.",
     "type": "composer-plugin",
     "license": "MIT",
     "authors": [

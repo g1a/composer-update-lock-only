@@ -22,6 +22,13 @@ class Plugin implements PluginInterface, Capable
     /**
      * {@inheritdoc}
      */
+    public function activate(Composer $composer, IOInterface $io)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getCapabilities()
     {
         return [

@@ -1,9 +1,9 @@
 <?php
-namespace ComposerTestScenarios;
+namespace ComposerUpdateLockOnly;
 
 use PHPUnit\Framework\TestCase;
 
-class SimpleProjectTest extends TestCase
+class UpdateLockTest extends TestCase
 {
     use Fixtures;
     use RunComposer;
@@ -13,49 +13,33 @@ class SimpleProjectTest extends TestCase
      * scenario and one other scenario, and ensures that the alternate scenario
      * can be created and installed.
      */
-    public function testSimpleProject()
+    public function testUpdateLock()
     {
         // Create the project directory to work with
         $testProjectDir = $this->createTestProject('simple-project');
 
-        // Run 'composer update' to build the scenario directories
-        list($output, $status) = $this->composer('update', $testProjectDir);
+        // Run 'composer install' to set up our path repository
+        list($output, $status) = $this->composer('install', $testProjectDir);
+        $this->assertRegExp('#Installing g1a/composer-update-lock-only[^:]*: Symlinking from#', $output);
         $this->assertNotContains('Your requirements could not be resolved to an installable set of packages.', $output);
         $this->assertEquals(0, $status);
 
-        // Test scenario 'semver10'
+        // Read the composer.json file
+        $composer_json = json_decode(file_get_contents($testProjectDir . '/composer.json'), true);
+        $this->assertNotEmpty($composer_json);
 
-        $scenarioDir = \ComposerTestScenarios\Handler::scenarioLockDir($testProjectDir, 'semver10');
-        $this->assertTrue(is_dir($scenarioDir));
+        // Allow composer/semver to be upgradable to 1.4.x
+        $composer_json['require']['composer/semver'] = '^1.4';
+        file_put_contents($testProjectDir . '/composer.json', json_encode($composer_json));
 
-        // The scenario directory should be different than the base directory
-        $this->assertNotEquals($testProjectDir, $scenarioDir);
-
-        // A lock file should be created
-        $this->assertFileExists($scenarioDir . '/composer.lock');
-
-        list($output, $status) = $this->composer('scenario', $testProjectDir, ['semver10']);
+        // Run 'composer update:lock' to upgrade the composer/semver project
+        list($output, $status) = $this->composer('update:lock', $testProjectDir);
+        $this->assertRegExp('#Updating composer/semver \(1.0.0\) to composer/semver \(1.[0-9].[0-9]\)#', $output);
         $this->assertEquals(0, $status);
 
-        list($output, $status) = $this->composer('info', $testProjectDir);
-        $this->assertEquals(0, $status);
-        $this->assertRegExp('#^composer/semver *1.0.0#', $output);
-
-        // Return to the 'default' scenario
-
-        $scenarioDir = \ComposerTestScenarios\Handler::scenarioLockDir($testProjectDir, 'default');
-        $this->assertTrue(is_dir($scenarioDir));
-
-        list($output, $status) = $this->composer('scenario', $testProjectDir, ['default']);
-        $this->assertEquals(0, $status);
-
-        list($output, $status) = $this->composer('info', $testProjectDir);
-        $this->assertEquals(0, $status);
-        $this->assertRegExp('#^composer/semver *1.4.2#', $output);
-
-        // Try to load a scenario that does not exist
-
-        list($output, $status) = $this->composer('scenario', $testProjectDir, ['no-such-scenario']);
-        $this->assertEquals(1, $status);
+        // Make sure that 'vendor' was not updated
+        $changelog = file_get_contents($testProjectDir . '/vendor/composer/semver/CHANGELOG.md');
+        $this->assertContains('1.0.0', $changelog);
+        $this->assertNotContains('1.2.0', $changelog);
     }
 }

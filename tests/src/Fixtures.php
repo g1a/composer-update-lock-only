@@ -1,5 +1,5 @@
 <?php
-namespace ComposerTestScenarios;
+namespace ComposerUpdateLockOnly;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;

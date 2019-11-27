@@ -1,5 +1,5 @@
 <?php
-namespace ComposerTestScenarios;
+namespace ComposerUpdateLockOnly;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
@@ -11,7 +11,7 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 class TmpDir
 {
     protected static $tmpDirs = [];
-    protected static $retain = true;
+    protected static $retain = false;
 
     /**
      * create will create a new empty temporary directory. This directory
@@ -30,7 +30,7 @@ class TmpDir
         $fs->remove($tmpDir);
         $fs->mkdir($tmpDir);
         if (empty(static::$tmpDirs)) {
-            register_shutdown_function(['\ComposerTestScenarios\TmpDir', 'cleanup']);
+            register_shutdown_function(['\ComposerUpdateLockOnly\TmpDir', 'cleanup']);
         }
         static::$tmpDirs[] = $tmpDir;
         return $tmpDir;

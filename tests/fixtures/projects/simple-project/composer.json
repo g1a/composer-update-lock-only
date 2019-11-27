@@ -1,6 +1,6 @@
 {
     "name": "g1a/simple-project",
-    "description": "A test project for composer-test-scenarios.",
+    "description": "A test project for composer-update-lock-only.",
     "license": "MIT",
     "repositories": [
         {
@@ -9,26 +9,14 @@
         }
     ],
     "require": {
-        "composer/semver": "^1.4"
+        "composer/semver": "~1.0.0"
     },
     "require-dev": {
-        "g1a/composer-test-scenarios": "dev-__BRANCH__"
+        "g1a/composer-update-lock-only": "dev-__BRANCH__"
     },
     "autoload": {
         "psr-4": {
             "ComposerTestScenarios\\": "src/"
-        }
-    },
-    "extra": {
-        "scenarios": {
-            "semver10": {
-                "require": {
-                    "composer/semver": "~1.0.0"
-                },
-                "scenario-options": {
-                    "create-lockfile": "true"
-                }
-            }
         }
     }
 }
