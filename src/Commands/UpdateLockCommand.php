@@ -26,7 +26,7 @@ class UpdateLockCommand extends BaseCommand
     protected function configure()
     {
         $this
-            ->setName('update:lock')
+            ->setName('update:lock-only')
             ->setDescription('Upgrades your dependencies to the latest version according to composer.json without downloading any of them; only updates the composer.lock file.')
             ->setDefinition(array(
                 new InputArgument('packages', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Packages that should be updated, if not provided all packages are.'),
@@ -43,11 +43,11 @@ class UpdateLockCommand extends BaseCommand
             ))
             ->setHelp(
                 <<<EOT
-The <info>update:lock</info> command reads the composer.json file from the
+The <info>update:lock-only</info> command reads the composer.json file from the
 current directory, processes it, and updates all the dependencies, recording
 the results in the composer.lock file.
 
-<info>php composer.phar update:lock</info>
+<info>php composer.phar update:lock-only</info>
 
 Note that runnning this command may bring your composer.lock file out of date
 with your vendor directory, analogous to the situation where you pull a new

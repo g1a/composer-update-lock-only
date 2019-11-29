@@ -32,8 +32,8 @@ class UpdateLockTest extends TestCase
         $composer_json['require']['composer/semver'] = '^1.4';
         file_put_contents($testProjectDir . '/composer.json', json_encode($composer_json));
 
-        // Run 'composer update:lock' to upgrade the composer/semver project
-        list($output, $status) = $this->composer('update:lock', $testProjectDir);
+        // Run 'composer update:lock-only' to upgrade the composer/semver project
+        list($output, $status) = $this->composer('update:lock-only', $testProjectDir);
         $this->assertRegExp('#Updating composer/semver \(1.0.0\) to composer/semver \(1.[0-9].[0-9]\)#', $output);
         $this->assertEquals(0, $status);
 
